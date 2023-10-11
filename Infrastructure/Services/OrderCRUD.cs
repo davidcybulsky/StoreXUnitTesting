@@ -15,22 +15,44 @@ namespace Infrastructure.Services
 
         public void Create(Order entity)
         {
-            throw new NotImplementedException();
+            _db.Add(entity);
+            _db.SaveChanges();
         }
 
         public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var query =
+                from order in _db.Orders
+                where order.Id == id
+                select order;
+            var result = query.FirstOrDefault();
+            _db.Remove(result);
+            _db.SaveChanges();
         }
 
         public Order Read(Guid id)
         {
-            throw new NotImplementedException();
+            var query =
+                from order in _db.Orders
+                where order.Id == id
+                select order;
+            var result = query.FirstOrDefault();
+            return result;
         }
 
         public void Update(Guid id, Order entity)
         {
-            throw new NotImplementedException();
+            var query =
+                from order in _db.Orders
+                where order.Id == id
+                select order;
+            var result = query.FirstOrDefault();
+            if (result is not null)
+            {
+                result.Products = entity.Products;
+                result.Status = result.Status;
+                _db.SaveChanges();
+            }
         }
     }
 }

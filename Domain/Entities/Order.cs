@@ -6,7 +6,7 @@ namespace Domain.Entities
     {
         public required Guid CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
-        public List<Product> Products { get; set; } = new();
-        public Status.STATUS Status { get; set; } = Constants.Status.STATUS.NEW;
+        public required List<Product> Products { get; set; }
+        public required Status.STATUS Status { get; set; } = Constants.Status.STATUS.NEW;
     }
 }

@@ -4,8 +4,8 @@ namespace Domain.Entities
 {
     public class Product : BaseEntity
     {
-        public string Name { get; set; }
-        public double Price { get; set; }
-        public Availability.AVAILABILITY Availability { get; set; } = Constants.Availability.AVAILABILITY.UNAVAILABLE;
+        public required string Name { get; set; }
+        public required double Price { get; set; }
+        public required Availability.AVAILABILITY Availability { get; set; } = Constants.Availability.AVAILABILITY.UNAVAILABLE;
     }
 }
