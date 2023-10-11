@@ -6,6 +6,6 @@ namespace Domain.Entities
     {
         public required string Name { get; set; }
         public required double Price { get; set; }
-        public required Availability.AVAILABILITY Availability { get; set; } = Constants.Availability.AVAILABILITY.UNAVAILABLE;
+        public required Availability.AVAILABILITY Availability { get; set; }
     }
 }
