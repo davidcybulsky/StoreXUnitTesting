@@ -12,7 +12,7 @@ namespace TestProject
         public void Test1()
         {
             //arrange
-            ICRUD<Product> productCRUD = new ProductCRUD(new StoreContext());
+            ICRUD<Product> productCRUD = new ProductService(new StoreContext());
             Product product = new()
             {
                 Name = "Krajzega",
@@ -33,7 +33,7 @@ namespace TestProject
         public void Test2()
         {
             //arrange
-            ICRUD<Product> productCRUD = new ProductCRUD(new StoreContext());
+            ICRUD<Product> productCRUD = new ProductService(new StoreContext());
             Product product = new()
             {
                 Name = "Krajzega",
@@ -64,7 +64,7 @@ namespace TestProject
         public void Test3()
         {
             //arrange
-            ICRUD<Product> productCRUD = new ProductCRUD(new StoreContext());
+            ICRUD<Product> productCRUD = new ProductService(new StoreContext());
             Product product = new()
             {
                 Name = "Krajzega",

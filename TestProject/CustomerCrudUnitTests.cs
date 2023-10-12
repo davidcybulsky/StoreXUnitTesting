@@ -11,7 +11,7 @@ namespace TestProject
         public void Test1()
         {
             //arrange
-            ICRUD<Customer> customerCRUD = new CustomerCRUD(new StoreContext());
+            ICRUD<Customer> customerCRUD = new CustomerService(new StoreContext());
             Customer customer = new()
             {
                 FirstName = "Jan",
@@ -33,7 +33,7 @@ namespace TestProject
         {
 
             //arrange
-            ICRUD<Customer> customerCRUD = new CustomerCRUD(new StoreContext());
+            ICRUD<Customer> customerCRUD = new CustomerService(new StoreContext());
             Customer customer = new()
             {
                 FirstName = "Jan",
@@ -64,7 +64,7 @@ namespace TestProject
         public void Test3()
         {
             //arrange
-            ICRUD<Customer> customerCRUD = new CustomerCRUD(new StoreContext());
+            ICRUD<Customer> customerCRUD = new CustomerService(new StoreContext());
             Customer customer = new()
             {
                 FirstName = "Jan",

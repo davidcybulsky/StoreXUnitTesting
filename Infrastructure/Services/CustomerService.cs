@@ -4,11 +4,11 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Services
 {
-    public class CustomerCRUD : ICRUD<Customer>
+    public class CustomerService : ICRUD<Customer>
     {
         private readonly StoreContext _db;
 
-        public CustomerCRUD(StoreContext db)
+        public CustomerService(StoreContext db)
         {
             _db = db;
         }

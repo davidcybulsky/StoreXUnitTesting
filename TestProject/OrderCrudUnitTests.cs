@@ -2,7 +2,9 @@
 using Domain.Constants;
 using Domain.Entities;
 using Infrastructure.Data;
+using Infrastructure.Exceptions;
 using Infrastructure.Services;
+using Assert = Xunit.Assert;
 
 namespace TestProject
 {
@@ -12,10 +14,18 @@ namespace TestProject
         public void Test1()
         {
             //arrange
-            ICRUD<Order> orderCRUD = new OrderCRUD(new StoreContext());
+            StoreContext context = new StoreContext();
+            ICRUD<Order> orderCRUD = new OrderService(context);
+            ICRUD<Customer> customerCRUD = new CustomerService(context);
+            Customer customer = new()
+            {
+                FirstName = "Jan",
+                LastName = "Paweł",
+                Email = "janpawel@gmail.pl",
+            };
             Order order = new()
             {
-                CustomerId = Guid.NewGuid(),
+                CustomerId = customer.Id,
                 Products = new List<Product>()
                 {
                     new()
@@ -29,6 +39,7 @@ namespace TestProject
             };
 
             //act
+            customerCRUD.Create(customer);
             orderCRUD.Create(order);
             Order createdOrder = orderCRUD.Read(order.Id);
 
@@ -41,10 +52,18 @@ namespace TestProject
         public void Test2()
         {
             //arrange
-            ICRUD<Order> orderCRUD = new OrderCRUD(new StoreContext());
+            StoreContext context = new StoreContext();
+            ICRUD<Order> orderCRUD = new OrderService(context);
+            ICRUD<Customer> customerCRUD = new CustomerService(context);
+            Customer customer = new()
+            {
+                FirstName = "Jan",
+                LastName = "Paweł",
+                Email = "janpawel@gmail.pl",
+            };
             Order order = new()
             {
-                CustomerId = Guid.NewGuid(),
+                CustomerId = customer.Id,
                 Products = new List<Product>()
                 {
                     new()
@@ -59,12 +78,13 @@ namespace TestProject
 
             Order orderToUpdate = new()
             {
-                CustomerId = order.Id,
+                CustomerId = order.CustomerId,
                 Products = order.Products,
                 Status = Status.STATUS.INPROGRESS
             };
 
             //act
+            customerCRUD.Create(customer);
             orderCRUD.Create(order);
             orderCRUD.Update(order.Id, orderToUpdate);
             Order updatedOrder = orderCRUD.Read(order.Id);
@@ -81,7 +101,55 @@ namespace TestProject
         public void Test3()
         {
             //arrange
-            ICRUD<Order> orderCRUD = new OrderCRUD(new StoreContext());
+            StoreContext context = new StoreContext();
+            ICRUD<Order> orderCRUD = new OrderService(context);
+            ICRUD<Customer> customerCRUD = new CustomerService(context);
+            Customer customer = new()
+            {
+                FirstName = "Jan",
+                LastName = "Paweł",
+                Email = "janpawel@gmail.pl",
+            };
+            Order order = new()
+            {
+                CustomerId = customer.Id,
+                Products = new List<Product>()
+                {
+                    new()
+                    {
+                        Name = "Foo",
+                        Price = 99.99,
+                        Availability = Availability.AVAILABILITY.AVAILABLE
+                    }
+                },
+                Status = Status.STATUS.NEW
+            };
+
+            Order orderToUpdate = new()
+            {
+                CustomerId = order.CustomerId,
+                Products = order.Products,
+                Status = Status.STATUS.INPROGRESS
+            };
+
+            //act
+            customerCRUD.Create(customer);
+            orderCRUD.Create(order);
+            Order createdOrder = orderCRUD.Read(order.Id);
+            orderCRUD.Delete(order.Id);
+            Order deletedOreder = orderCRUD.Read(order.Id);
+
+            //assert 
+            Assert.Equal(order, createdOrder);
+            Assert.Null(deletedOreder);
+        }
+
+        [Fact]
+        public void Test4()
+        {
+            //arrange
+            StoreContext context = new StoreContext();
+            ICRUD<Order> orderCRUD = new OrderService(context);
             Order order = new()
             {
                 CustomerId = Guid.NewGuid(),
@@ -97,15 +165,45 @@ namespace TestProject
                 Status = Status.STATUS.NEW
             };
 
-            //act
-            orderCRUD.Create(order);
-            Order createdOrder = orderCRUD.Read(order.Id);
-            orderCRUD.Delete(order.Id);
-            Order deletedOreder = orderCRUD.Read(order.Id);
+            //assert
+            Assert.Throws<BusinessLogicException>(() => orderCRUD.Create(order));
+        }
 
-            //assert 
-            Assert.Equal(order, createdOrder);
-            Assert.Null(deletedOreder);
+
+        [Fact]
+        public void Test5()
+        {
+            //arrange
+            StoreContext context = new StoreContext();
+            ICRUD<Customer> customerCRUD = new CustomerService(context);
+            ICRUD<Order> orderCRUD = new OrderService(context);
+            Customer customer = new()
+            {
+                FirstName = "Jan",
+                LastName = "Paweł",
+                Email = "janpaul@gmail.ru"
+            };
+
+            Order order = new()
+            {
+                CustomerId = customer.Id,
+                Products = new List<Product>()
+                {
+                    new()
+                    {
+                        Name = "Foo",
+                        Price = 99.99,
+                        Availability = Availability.AVAILABILITY.UNAVAILABLE
+                    }
+                },
+                Status = Status.STATUS.NEW
+            };
+
+            //act
+            customerCRUD.Create(customer);
+
+            //assert
+            Assert.Throws<BusinessLogicException>(() => orderCRUD.Create(order));
         }
     }
 }

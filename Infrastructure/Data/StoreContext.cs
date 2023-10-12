@@ -5,15 +5,22 @@ namespace Infrastructure.Data
 {
     public class StoreContext : DbContext
     {
+        private Guid _id;
+
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<Product> Products { get; set; }
 
+        public StoreContext()
+        {
+            _id = Guid.NewGuid();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            optionsBuilder.UseInMemoryDatabase(_id.ToString());
             base.OnConfiguring(optionsBuilder);
         }
 
