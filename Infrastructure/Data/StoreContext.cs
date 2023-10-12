@@ -13,9 +13,14 @@ namespace Infrastructure.Data
 
         public DbSet<Product> Products { get; set; }
 
-        public StoreContext()
+        public StoreContext() : base()
         {
             _id = Guid.NewGuid();
+        }
+
+        public StoreContext(Guid id)
+        {
+            _id = id;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
