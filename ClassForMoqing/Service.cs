@@ -11,6 +11,11 @@ namespace ProjectForMoqing
             _repository = repository;
         }
 
+        public void Create(Model model)
+        {
+            _repository.CreateModel(model);
+        }
+
         public Model GetModel(int id)
         {
             var model = _repository.GetModelById(id);

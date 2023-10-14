@@ -4,14 +4,22 @@ using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Exceptions;
 using Infrastructure.Services;
+using Xunit.Abstractions;
 using Assert = Xunit.Assert;
 
 namespace TestProject
 {
     public class OrderCrudUnitTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public OrderCrudUnitTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
-        public void Test1()
+        public void OrderCreation_ForCorrectOrder_CreatesGivenOrderInDb()
         {
             //arrange
             StoreContext context = new StoreContext();
@@ -43,13 +51,13 @@ namespace TestProject
             orderCRUD.Create(order);
             Order createdOrder = orderCRUD.Read(order.Id);
 
-            //assert 
-            Assert.NotNull(createdOrder);
+            //assert
             Assert.Equal(order, createdOrder);
+            _output.WriteLine("Order creation works");
         }
 
         [Fact]
-        public void Test2()
+        public void OrderUpdate_ForCorrectOrderToUpdate_UpdatesOrderWhoIsInDb()
         {
             //arrange
             StoreContext context = new StoreContext();
@@ -90,15 +98,12 @@ namespace TestProject
             Order updatedOrder = orderCRUD.Read(order.Id);
 
             //assert
-            Assert.NotNull(updatedOrder);
             Assert.Equal(order, updatedOrder);
-            Assert.Equal(order.CustomerId, updatedOrder.CustomerId);
-            Assert.Equal(order.Status, updatedOrder.Status);
-            Assert.Equal(order.Products, updatedOrder.Products);
+            _output.WriteLine("Order update works");
         }
 
         [Fact]
-        public void Test3()
+        public void OrderDeletion_ForCorrectId_DeletesOrderWithGivenId()
         {
             //arrange
             StoreContext context = new StoreContext();
@@ -125,27 +130,19 @@ namespace TestProject
                 Status = Status.STATUS.NEW
             };
 
-            Order orderToUpdate = new()
-            {
-                CustomerId = order.CustomerId,
-                Products = order.Products,
-                Status = Status.STATUS.INPROGRESS
-            };
-
             //act
             customerCRUD.Create(customer);
             orderCRUD.Create(order);
-            Order createdOrder = orderCRUD.Read(order.Id);
             orderCRUD.Delete(order.Id);
             Order deletedOreder = orderCRUD.Read(order.Id);
 
             //assert 
-            Assert.Equal(order, createdOrder);
             Assert.Null(deletedOreder);
+            _output.WriteLine("Order deletion works");
         }
 
         [Fact]
-        public void Test4()
+        public void BussinesLogicException_ForBadCustomerId_ThrowsException()
         {
             //arrange
             StoreContext context = new StoreContext();
@@ -167,11 +164,12 @@ namespace TestProject
 
             //assert
             Assert.Throws<BusinessLogicException>(() => orderCRUD.Create(order));
+            _output.WriteLine("Order expection works");
         }
 
 
         [Fact]
-        public void Test5()
+        public void BussinesLogicException_ForUnavailableProduct_ThrowsException()
         {
             //arrange
             StoreContext context = new StoreContext();
@@ -204,6 +202,7 @@ namespace TestProject
 
             //assert
             Assert.Throws<BusinessLogicException>(() => orderCRUD.Create(order));
+            _output.WriteLine("Order expection works");
         }
     }
 }

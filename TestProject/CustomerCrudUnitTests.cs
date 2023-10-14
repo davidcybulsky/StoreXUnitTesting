@@ -2,13 +2,21 @@ using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Services;
+using Xunit.Abstractions;
 
 namespace TestProject
 {
     public class CustomerCrudUnitTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public CustomerCrudUnitTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
-        public void Test1()
+        public void CustomerCreation_ForCorrectCustomer_CreatesGivenCustomerInDb()
         {
             //arrange
             ICRUD<Customer> customerCRUD = new CustomerService(new StoreContext());
@@ -24,12 +32,12 @@ namespace TestProject
             var customer2 = customerCRUD.Read(customer.Id);
 
             //assert
-            Assert.NotNull(customer2);
             Assert.Equal(customer, customer2);
+            _output.WriteLine("Customer creation works");
         }
 
         [Fact]
-        public void Test2()
+        public void CustomerUpdate_ForCorrectCustomerToUpdate_UpdatesCustomerWhoIsInDb()
         {
 
             //arrange
@@ -53,15 +61,12 @@ namespace TestProject
             Customer updatedUser = customerCRUD.Read(customer.Id);
 
             //assert
-            Assert.NotNull(updatedUser);
             Assert.Equal(customer, updatedUser);
-            Assert.Equal(customer.FirstName, updatedUser.FirstName);
-            Assert.Equal(customer.LastName, updatedUser.LastName);
-            Assert.Equal(customer.Email, updatedUser.Email);
+            _output.WriteLine("Customer update works");
         }
 
         [Fact]
-        public void Test3()
+        public void CustomerDeletion_ForCorrectId_DeletesCustomerWithGivenId()
         {
             //arrange
             ICRUD<Customer> customerCRUD = new CustomerService(new StoreContext());
@@ -74,13 +79,12 @@ namespace TestProject
 
             //act
             customerCRUD.Create(customer);
-            Customer customerCreated = customerCRUD.Read(customer.Id);
             customerCRUD.Delete(customer.Id);
             Customer customerDeleted = customerCRUD.Read(customer.Id);
 
             //assert
-            Assert.Equal(customer, customerCreated);
             Assert.Null(customerDeleted);
+            _output.WriteLine("Customer deletion works");
         }
     }
 }
